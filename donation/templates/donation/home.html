@@ -3,9 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Pet Donation</title>
 </head>
 <body>
-    <h1>Hi</h1>
+    <h1>Pet Donation</h1>
+    {% if user.is_authenticated %}
+        <p>Signed in as {{ user.first_name }} {{ user.last_name }} ({{ user.email }}).</p>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Log out</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'register' %}">Create an account</a></p>
+        <p><a href="{% url 'login' %}">Log in</a></p>
+    {% endif %}
 </body>
 </html>
