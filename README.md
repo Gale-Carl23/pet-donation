@@ -25,3 +25,5 @@ python manage.py runserver
 ```
 
 Open <http://127.0.0.1:8000/> in a browser. Registration is at `/register/` and login is at `/login/`.
+
+For production, set the `DJANGO_SECRET_KEY` environment variable and set `DEBUG=False`.
