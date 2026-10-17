@@ -10,12 +10,17 @@ def home(request):
     return render(request, "donation/home.html")
 
 
+def about(request):
+    return render(request, "donation/about.html")
+
+
 def register(request):
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
+            messages.success(request, "Your account is ready. Welcome to Kindred Paws!")
             return redirect("home")
     else:
         form = RegistrationForm()

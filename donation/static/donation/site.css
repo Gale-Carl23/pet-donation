@@ -103,6 +103,16 @@ h1 span { color: var(--forest); }
 .privacy-note > span { padding-top: 1px; color: var(--coral-dark); }
 .privacy-note p { margin: 0; color: var(--muted); font-size: .86rem; }
 
+.about-hero { max-width: 770px; padding-block: 34px 42px; }
+.about-hero h1 { font-size: clamp(2.8rem, 5.2vw, 4.6rem); }
+.about-lead { max-width: 680px; margin: 0; color: var(--muted); font-size: 1.12rem; }
+.about-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 23px; }
+.about-card { padding: 25px; border: 1px solid rgba(36, 93, 78, .11); border-radius: 22px; background: rgba(255, 254, 250, .8); }
+.about-symbol { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 17px; border-radius: 14px; background: var(--sage); color: var(--forest); font-size: 1.3rem; }
+.about-card h2 { margin-bottom: 8px; font-size: 1.12rem; letter-spacing: -.03em; }
+.about-card p { margin: 0; color: var(--muted); font-size: .92rem; }
+.about-note { max-width: 780px; margin: 0 0 22px; color: var(--muted); font-size: .9rem; }
+
 .notices { margin-bottom: 22px; }
 .notice { margin: 0; padding: 13px 17px; border: 1px solid var(--line); border-radius: 14px; background: #edf5eb; color: var(--forest-dark); font-weight: 650; }
 .notice.error { border-color: #f0c5b8; background: #fff0eb; color: #9a402b; }
@@ -110,13 +120,14 @@ a:focus-visible, button:focus-visible { outline: 3px solid #e3a07e; outline-offs
 
 @media (max-width: 800px) {
     .site-header, .main-content, .site-footer { width: min(100% - 36px, 620px); }
-    .site-header { min-height: 74px; }
-    .main-nav { gap: 15px; }
+    .site-header { min-height: 74px; flex-wrap: wrap; padding-block: 14px; }
+    .main-nav { width: 100%; flex-wrap: wrap; gap: 15px; }
     .hero { grid-template-columns: 1fr; gap: 28px; padding-top: 28px; }
     .hero-art { min-height: 280px; }
     .paw-large { width: 175px; height: 175px; font-size: 5.7rem; }
     .sun-disc { width: 100px; height: 100px; }
     .steps-grid { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; }
     .step-card { min-height: unset; }
     .account-layout, .donation-layout { grid-template-columns: 1fr; gap: 28px; padding-block: 8px; }
     .account-intro, .donation-intro { max-width: 620px; }

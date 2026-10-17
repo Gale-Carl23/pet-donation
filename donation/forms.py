@@ -28,6 +28,11 @@ class EmailLoginForm(AuthenticationForm):
 
 
 class DonationForm(forms.ModelForm):
+    file = forms.ImageField(
+        help_text="Upload a readable image no larger than 5 MB.",
+        widget=forms.ClearableFileInput(attrs={"accept": "image/*"}),
+    )
+
     class Meta:
         model = Donation
         fields = ("price", "payment_method", "file")
@@ -38,3 +43,9 @@ class DonationForm(forms.ModelForm):
         widgets = {
             "price": forms.NumberInput(attrs={"min": "0.01", "step": "0.01"}),
         }
+
+    def clean_file(self):
+        image = self.cleaned_data["file"]
+        if image.size > 5 * 1024 * 1024:
+            raise ValidationError("The proof image must be 5 MB or smaller.")
+        return image

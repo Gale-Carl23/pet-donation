@@ -6,6 +6,7 @@ from .forms import EmailLoginForm
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("about/", views.about, name="about"),
     path("register/", views.register, name="register"),
     path("donate/", views.create_donation, name="donation_create"),
     path(

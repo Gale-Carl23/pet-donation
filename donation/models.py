@@ -6,6 +6,8 @@ from django.db import models
 
 class User(AbstractUser):
     username = None
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
     email = models.EmailField("email address", unique=True)
 
     USERNAME_FIELD = "email"
