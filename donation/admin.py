@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.contrib.auth.forms import UserChangeForm
 
 from .forms import RegistrationForm
-from .models import Donation, User
+from .models import Donation, Pet, User
 
 
 class AdminUserChangeForm(UserChangeForm):
@@ -49,3 +49,20 @@ class DonationAdmin(admin.ModelAdmin):
     list_select_related = ("donator",)
     ordering = ("-id",)
     fields = ("donator", "price", "payment_method", "file")
+
+
+@admin.register(Pet)
+class PetAdmin(admin.ModelAdmin):
+    list_display = ("name", "category", "age", "status")
+    list_filter = ("category", "status")
+    search_fields = ("name", "background")
+    ordering = ("name",)
+    fields = (
+        "name",
+        "age",
+        "background",
+        "google_map_url",
+        "pet_img",
+        "category",
+        "status",
+    )
