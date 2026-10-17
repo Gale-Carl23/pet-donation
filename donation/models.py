@@ -1,4 +1,6 @@
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -36,3 +38,26 @@ class Pet(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Donation(models.Model):
+    class PaymentMethod(models.TextChoices):
+        CASH = "cash", "Cash"
+        BANK_TRANSFER = "bank_transfer", "Bank transfer"
+        ONLINE = "online", "Online payment"
+
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(0.01)],
+    )
+    payment_method = models.CharField(max_length=20, choices=PaymentMethod.choices)
+    file = models.ImageField(upload_to="donation_proofs/")
+    donator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="donations",
+    )
+
+    def __str__(self):
+        return f"Donation {self.pk} from {self.donator}"
