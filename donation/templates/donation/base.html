@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f5ee">
+    <title>{% block title %}Kindred Paws{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'donation/site.css' %}">
+</head>
+<body>
+    <div class="site-shell">
+        <header class="site-header">
+            <a class="brand" href="{% url 'home' %}" aria-label="Kindred Paws home">
+                <span class="brand-mark" aria-hidden="true">🐾</span>
+                <span>Kindred Paws</span>
+            </a>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="{% url 'home' %}">Home</a>
+                {% if user.is_authenticated %}
+                    <a class="nav-cta" href="{% url 'donation_create' %}">Donate</a>
+                    <form method="post" action="{% url 'logout' %}" class="nav-logout">
+                        {% csrf_token %}
+                        <button type="submit">Log out</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Log in</a>
+                    <a class="nav-cta" href="{% url 'register' %}">Create account</a>
+                {% endif %}
+            </nav>
+        </header>
+
+        <main class="main-content">
+            {% if messages %}
+                <div class="notices" aria-live="polite">
+                    {% for message in messages %}
+                        <p class="notice {{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="site-footer">
+            <span>Made with care for pets and the people who help them.</span>
+            <a href="{% url 'home' %}">Kindred Paws</a>
+        </footer>
+    </div>
+</body>
+</html>

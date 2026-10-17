@@ -1,19 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log in</title>
-</head>
-<body>
-    <main>
-        <h1>Log in</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Log in</button>
-        </form>
-        <p>Need an account? <a href="{% url 'register' %}">Register</a>.</p>
-    </main>
-</body>
-</html>
+{% extends "donation/base.html" %}
+
+{% block title %}Log in | Kindred Paws{% endblock %}
+
+{% block content %}
+    <section class="account-layout">
+        <div class="account-intro">
+            <p class="eyebrow">Welcome back</p>
+            <h1>Your support makes <span>a difference.</span></h1>
+            <p>Sign in to continue supporting pets and keep your donations in one place.</p>
+        </div>
+        <div class="form-card">
+            <div class="form-card-heading">
+                <span class="form-icon" aria-hidden="true">♡</span>
+                <h2>Log in</h2>
+                <p>Use the email address on your account.</p>
+            </div>
+            <form method="post" class="styled-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="button button-primary button-full" type="submit">Log in <span aria-hidden="true">→</span></button>
+            </form>
+            <p class="form-switch">New to Kindred Paws? <a href="{% url 'register' %}">Create an account</a></p>
+        </div>
+    </section>
+{% endblock %}

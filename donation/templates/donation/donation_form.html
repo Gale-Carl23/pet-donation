@@ -1,19 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Make a donation</title>
-</head>
-<body>
-    <main>
-        <h1>Make a donation</h1>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit donation</button>
-        </form>
-        <p><a href="{% url 'home' %}">Back to home</a></p>
-    </main>
-</body>
-</html>
+{% extends "donation/base.html" %}
+
+{% block title %}Make a donation | Kindred Paws{% endblock %}
+
+{% block content %}
+    <section class="donation-layout">
+        <div class="donation-intro">
+            <p class="eyebrow">Your kindness in action</p>
+            <h1>Every contribution can <span>make a difference.</span></h1>
+            <p>Enter the amount and payment method, then upload an image of your proof so your donation can be reviewed.</p>
+            <div class="privacy-note">
+                <span aria-hidden="true">✦</span>
+                <p>Your donation will be linked to your account. The image is saved with your submission.</p>
+            </div>
+        </div>
+        <div class="form-card donation-card">
+            <div class="form-card-heading">
+                <span class="form-icon" aria-hidden="true">♡</span>
+                <h2>Donation details</h2>
+                <p>All fields are required.</p>
+            </div>
+            <form method="post" enctype="multipart/form-data" class="styled-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="button button-primary button-full" type="submit">Submit donation <span aria-hidden="true">→</span></button>
+            </form>
+        </div>
+    </section>
+{% endblock %}
