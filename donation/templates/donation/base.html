@@ -17,9 +17,9 @@
             </a>
             <nav class="main-nav" aria-label="Main navigation">
                 <a href="{% url 'home' %}">Home</a>
-                <a href="{% url 'donation_create' %}">Donation</a>
                 <a href="{% url 'about' %}">About us</a>
                 {% if user.is_authenticated %}
+                    <a class="nav-cta" href="{% url 'donation_create' %}">Donation</a>
                     <form method="post" action="{% url 'logout' %}" class="nav-logout">
                         {% csrf_token %}
                         <button type="submit">Log out</button>
