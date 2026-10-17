@@ -1,7 +1,9 @@
+from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from .forms import RegistrationForm
+from .forms import DonationForm, RegistrationForm
 
 
 def home(request):
@@ -19,3 +21,19 @@ def register(request):
         form = RegistrationForm()
 
     return render(request, "donation/register.html", {"form": form})
+
+
+@login_required(login_url="login")
+def create_donation(request):
+    if request.method == "POST":
+        form = DonationForm(request.POST, request.FILES)
+        if form.is_valid():
+            donation = form.save(commit=False)
+            donation.donator = request.user
+            donation.save()
+            messages.success(request, "Your donation was submitted.")
+            return redirect("home")
+    else:
+        form = DonationForm()
+
+    return render(request, "donation/donation_form.html", {"form": form})

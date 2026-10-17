@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make a donation</title>
+</head>
+<body>
+    <main>
+        <h1>Make a donation</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit donation</button>
+        </form>
+        <p><a href="{% url 'home' %}">Back to home</a></p>
+    </main>
+</body>
+</html>

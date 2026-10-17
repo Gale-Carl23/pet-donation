@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
-from .models import User
+from .models import Donation, User
 
 
 class RegistrationForm(UserCreationForm):
@@ -25,3 +25,16 @@ class EmailLoginForm(AuthenticationForm):
 
     def clean_username(self):
         return self.cleaned_data["username"].strip().lower()
+
+
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model = Donation
+        fields = ("price", "payment_method", "file")
+        labels = {
+            "price": "Donation amount",
+            "file": "Payment proof image",
+        }
+        widgets = {
+            "price": forms.NumberInput(attrs={"min": "0.01", "step": "0.01"}),
+        }

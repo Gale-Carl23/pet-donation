@@ -7,8 +7,14 @@
 </head>
 <body>
     <h1>Pet Donation</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
     {% if user.is_authenticated %}
         <p>Signed in as {{ user.first_name }} {{ user.last_name }} ({{ user.email }}).</p>
+        <p><a href="{% url 'donation_create' %}">Make a donation</a></p>
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit">Log out</button>

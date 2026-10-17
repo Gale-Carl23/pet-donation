@@ -7,6 +7,7 @@ from .forms import EmailLoginForm
 urlpatterns = [
     path("", views.home, name="home"),
     path("register/", views.register, name="register"),
+    path("donate/", views.create_donation, name="donation_create"),
     path(
         "login/",
         auth_views.LoginView.as_view(
