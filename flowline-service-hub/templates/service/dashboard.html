@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+<div class="pagehead">
+  <div><h1>Overview</h1><p>{{ today|date:"l, M j" }} · components due within 14 days and today’s visits</p></div>
+  <a class="btn" href="{% url 'customers' %}">Book a visit</a>
+</div>
+<div class="kpis">
+  <div class="kpi bad"><span class="v">{{ kpi_overdue }}</span><span class="l">Components overdue</span></div>
+  <div class="kpi warn"><span class="v">{{ kpi_soon }}</span><span class="l">Due in the next 14 days</span></div>
+  <div class="kpi acc"><span class="v">{{ todays|length }}</span><span class="l">Visits today</span></div>
+  <div class="kpi ok"><span class="v">{{ kpi_done }}</span><span class="l">Jobs completed this month</span></div>
+</div>
+<div class="cols">
+  <section class="panel">
+    <div class="panel-h"><h2>Maintenance due</h2><span class="small muted">{{ unbooked }} not yet booked</span></div>
+    {% for r in rows %}
+      <div class="row due">
+        <div class="who"><a href="{% url 'system_detail' r.system.pk %}">{{ r.system.customer.name }}</a><small>{{ r.system }}</small></div>
+        <div class="comps">{% for c in r.due %}<span class="chip {{ c.level }}">{{ c.name }}</span>{% endfor %}</div>
+        <div><span class="pill {{ r.worst.level }}">{{ r.worst.due_label }}</span></div>
+        <div class="acts">
+          {% if r.booked %}
+            <a class="btn ghost sm" href="{% url 'job_detail' r.booked.pk %}">Booked {{ r.booked.scheduled_date|date:"M j" }}</a>
+          {% else %}
+            <a class="btn ghost sm" href="{% url 'reminder' r.system.pk %}">Reminder</a>
+            <a class="btn sm" href="{% url 'job_new' r.system.pk %}">Schedule</a>
+          {% endif %}
+        </div>
+      </div>
+    {% empty %}
+      <div class="empty"><b>Every system is up to date</b><span>Nothing is due in the next 14 days. Systems you record under Customers show up here when parts are due.</span></div>
+    {% endfor %}
+  </section>
+  <section class="panel">
+    <div class="panel-h"><h2>Today</h2><a class="small link" href="{% url 'schedule' %}">Full schedule</a></div>
+    {% for job in todays %}{% include "includes/job_row.html" %}{% empty %}<div class="empty"><span>No visits booked for today.</span></div>{% endfor %}
+  </section>
+</div>
+{% endblock %}

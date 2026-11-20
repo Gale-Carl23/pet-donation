@@ -1,0 +1,5 @@
+<a class="job" href="{% url 'job_detail' job.pk %}">
+  <span class="t">{% if job.scheduled_time %}{{ job.scheduled_time|time:"g:i A" }}{% else %}Any time{% endif %}</span>
+  <span class="m"><b>{{ job.customer.name }}</b><span>{{ job.get_job_type_display }} · {{ job.technician|default:"Unassigned" }}{% if job.customer.area %} · {{ job.customer.area }}{% endif %}</span></span>
+  {% include "includes/status.html" %}
+</a>

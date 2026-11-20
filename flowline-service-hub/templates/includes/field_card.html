@@ -1,0 +1,6 @@
+<a class="fcard {% if job.status == 'done' %}done{% elif job.is_late %}late{% endif %}" href="{% url 'job_detail' job.pk %}">
+  <span class="ft"><span class="mono small">{% if job.scheduled_date == today %}{% if job.scheduled_time %}{{ job.scheduled_time|time:"g:i A" }}{% else %}Any time{% endif %}{% else %}{{ job.scheduled_date|date:"D, M j" }}{% endif %}</span>{% include "includes/status.html" %}</span>
+  <h3>{{ job.customer.name }}</h3>
+  <span class="small">{{ job.get_job_type_display }}{% if job.system %} · {{ job.system }}{% endif %}</span>
+  <span class="addr">{{ job.customer.address }}{% if job.customer.area %}, {{ job.customer.area }}{% endif %}</span>
+</a>

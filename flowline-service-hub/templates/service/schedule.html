@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Schedule{% endblock %}
+{% block content %}
+<div class="pagehead">
+  <div><h1>Schedule</h1><p>Every booked visit, by day</p></div>
+  <form method="get" class="filters">
+    <select name="tech" aria-label="Technician">
+      <option value="">All technicians</option>
+      {% for t in technicians %}<option value="{{ t.pk }}" {% if tech_id == t.pk|stringformat:"d" %}selected{% endif %}>{{ t }}</option>{% endfor %}
+    </select>
+    <select name="status" aria-label="Status">
+      {% for key, label in status_filters %}<option value="{{ key }}" {% if status == key %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+    <button class="btn ghost" type="submit">Filter</button>
+  </form>
+</div>
+<section class="panel">
+  {% regroup page.object_list by scheduled_date as days %}
+  {% for day in days %}
+    <div class="dayhead {% if day.grouper == today %}today{% endif %}"><span>{{ day.grouper|date:"D, M j, Y" }}</span><span>{% if day.grouper == today %}Today{% endif %}</span></div>
+    {% for job in day.list %}{% include "includes/job_row.html" %}{% endfor %}
+  {% empty %}
+    <div class="empty"><b>No jobs here</b><span>Book a visit from a due system on the Overview, or from a customer’s page.</span></div>
+  {% endfor %}
+</section>
+{% include "includes/pager.html" %}
+{% endblock %}

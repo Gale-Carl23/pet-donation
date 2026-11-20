@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>Settings</h1><p>Company details, staff accounts and the audit log</p></div>
+  <a class="btn ghost" href="{% url 'audit_log' %}">Audit log</a></div>
+<div class="cols">
+  <section class="panel pad stack">
+    <h2>Company</h2>
+    <form method="post" class="stack">
+      {% csrf_token %}
+      {% for field in form %}{% include "includes/field.html" %}{% endfor %}
+      <div class="actions"><button class="btn" type="submit">Save settings</button></div>
+    </form>
+  </section>
+  <section class="panel">
+    <div class="panel-h"><h2>Staff</h2>{% if user.is_staff %}<a class="btn quiet sm" href="{% url 'admin:accounts_user_add' %}">Add staff</a>{% endif %}</div>
+    {% for s in staff %}
+      <div class="row staff"><div class="who">{{ s }}<small>{{ s.email }}</small></div><span class="pill {% if s.is_active %}acc{% else %}mute{% endif %}">{% if s.is_active %}{{ s.get_role_display }}{% else %}Disabled{% endif %}</span>
+        {% if user.is_staff %}<a class="btn ghost sm" href="{% url 'admin:accounts_user_change' s.pk %}">Manage</a>{% endif %}</div>
+    {% endfor %}
+    <p class="small muted pad">New staff get a temporary password and must choose their own at first sign-in. Disable accounts for people who leave instead of deleting them, so their work history stays.</p>
+  </section>
+</div>
+{% endblock %}

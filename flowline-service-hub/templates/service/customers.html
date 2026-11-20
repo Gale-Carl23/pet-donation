@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Customers{% endblock %}
+{% block content %}
+<div class="pagehead">
+  <div><h1>Customers</h1><p>{{ total_customers }} customers · {{ total_systems }} installed systems</p></div>
+  <div class="filters">
+    <form method="get" class="filters" role="search"><input type="search" name="q" value="{{ q }}" placeholder="Search name, area, contact" aria-label="Search customers"><button class="btn ghost" type="submit">Search</button></form>
+    <a class="btn" href="{% url 'customer_new' %}">Add customer</a>
+  </div>
+</div>
+<section class="panel">
+  {% for c in page %}
+    <div class="cust">
+      <div class="cust-h">
+        <div><h3><a href="{% url 'customer_detail' c.pk %}">{{ c.name }}</a></h3>
+          <div class="meta">{{ c.get_customer_type_display }}{% if c.area %} · {{ c.area }}{% endif %}{% if c.contact_name %} · {{ c.contact_name }}{% endif %}{% if c.phone %} · <span class="mono">{{ c.phone }}</span>{% endif %}</div></div>
+        <div class="acts"><a class="btn quiet sm" href="{% url 'system_new' c.pk %}">Add system</a></div>
+      </div>
+      {% if c.systems.all %}
+        <div class="units">
+          {% for s in c.systems.all %}
+            <a class="unit" href="{% url 'system_detail' s.pk %}">
+              <span class="u-t">{{ s }}</span>
+              <span class="small muted">{{ s.model|default:"Model not set" }}{% if s.serial %} · S/N <span class="mono">{{ s.serial }}</span>{% endif %}</span>
+              {% if s.worst %}<span><span class="pill {{ s.worst.level }}">{% if s.worst.level == "ok" %}Next service {{ s.worst.next_due|date:"M j" }}{% else %}{{ s.worst.due_label }}{% endif %}</span></span>{% endif %}
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}<div class="small muted">No systems recorded yet.</div>{% endif %}
+    </div>
+  {% empty %}
+    <div class="empty">{% if q %}<span>No customers match “{{ q }}”.</span>{% else %}<b>No customers yet</b><span>Add your first customer, then record the water systems you installed for them.</span><a class="btn" href="{% url 'customer_new' %}">Add customer</a>{% endif %}</div>
+  {% endfor %}
+</section>
+{% include "includes/pager.html" %}
+{% endblock %}

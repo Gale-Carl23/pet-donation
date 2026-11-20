@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{% if customer %}Edit customer{% else %}Add customer{% endif %}{% endblock %}
+{% block content %}
+<div class="sheetpage">
+  <div class="pagehead"><div><h1>{% if customer %}Edit {{ customer.name }}{% else %}Add customer{% endif %}</h1></div>
+    <a class="btn ghost" href="{% if customer %}{% url 'customer_detail' customer.pk %}{% else %}{% url 'customers' %}{% endif %}">Cancel</a></div>
+  <form method="post" class="panel pad stack">
+    {% csrf_token %}
+    <div class="grid2">
+      {% include "includes/field.html" with field=form.name %}
+      {% include "includes/field.html" with field=form.customer_type %}
+      {% include "includes/field.html" with field=form.contact_name %}
+      {% include "includes/field.html" with field=form.phone %}
+      {% include "includes/field.html" with field=form.email %}
+      {% include "includes/field.html" with field=form.area %}
+    </div>
+    {% include "includes/field.html" with field=form.address %}
+    {% include "includes/field.html" with field=form.notes %}
+    <div class="actions"><button class="btn" type="submit">{% if customer %}Save{% else %}Add customer{% endif %}</button></div>
+  </form>
+</div>
+{% endblock %}

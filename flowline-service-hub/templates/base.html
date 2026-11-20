@@ -1,0 +1,50 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% block title %}Service Hub{% endblock %} · {{ company_name }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <script src="{% static 'js/app.js' %}" defer></script>
+</head>
+<body>
+{% if user.is_authenticated and not user.must_change_password %}
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="{% url 'home' %}">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="8" class="logo-bg"/><path d="M15 6c-3.6 4.6-6 8-6 11a6 6 0 0 0 12 0c0-3-2.4-6.4-6-11z" class="logo-fg"/></svg>
+      <span><span class="brand-name">Service Hub</span><span class="brand-sub">{{ company_name }}</span></span>
+    </a>
+    <nav class="tabs" aria-label="Sections">
+      {% with name=request.resolver_match.url_name %}
+      {% if user.is_office %}
+        <a href="{% url 'dashboard' %}" {% if name == 'dashboard' %}aria-current="page"{% endif %}>Overview</a>
+        <a href="{% url 'schedule' %}" {% if name == 'schedule' %}aria-current="page"{% endif %}>Schedule</a>
+      {% endif %}
+        <a href="{% url 'field' %}" {% if name == 'field' %}aria-current="page"{% endif %}>{% if user.is_office %}Field app{% else %}My jobs{% endif %}</a>
+      {% if user.is_office %}
+        <a href="{% url 'customers' %}" {% if name == 'customers' or name == 'customer_detail' or name == 'system_detail' %}aria-current="page"{% endif %}>Customers</a>
+      {% endif %}
+      {% if user.is_admin %}
+        <a href="{% url 'company_settings' %}" {% if name == 'company_settings' or name == 'audit_log' %}aria-current="page"{% endif %}>Settings</a>
+      {% endif %}
+      {% endwith %}
+    </nav>
+    <div class="me">
+      <span class="small muted">{{ user }}</span>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn ghost sm" type="submit">Sign out</button></form>
+    </div>
+  </div>
+</header>
+{% endif %}
+<main class="wrap">
+  {% if messages %}<div class="messages" role="status">{% for m in messages %}<div class="msg-{{ m.tags }}">{{ m }}</div>{% endfor %}</div>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+<div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

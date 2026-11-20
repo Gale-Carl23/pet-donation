@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Add water system{% endblock %}
+{% block content %}
+<div class="sheetpage">
+  <div class="pagehead"><div><div class="eyebrow">Add water system</div><h1>{{ customer.name }}</h1>
+    <p>Components and service intervals are filled in from the system type. You can adjust them on the next page.</p></div>
+    <a class="btn ghost" href="{% url 'customer_detail' customer.pk %}">Cancel</a></div>
+  <form method="post" class="panel pad stack">
+    {% csrf_token %}
+    <div class="grid2">{% for field in form %}{% include "includes/field.html" %}{% endfor %}</div>
+    <div class="actions"><button class="btn" type="submit">Add system</button></div>
+  </form>
+</div>
+{% endblock %}

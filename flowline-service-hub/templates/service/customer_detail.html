@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ customer.name }}{% endblock %}
+{% block content %}
+<div class="pagehead">
+  <div><div class="eyebrow">{{ customer.get_customer_type_display }}</div><h1>{{ customer.name }}</h1>
+    <p>{{ customer.contact_name|default:"No contact" }}{% if customer.phone %} · <span class="mono selectable">{{ customer.phone }}</span>{% endif %}{% if customer.email %} · {{ customer.email }}{% endif %}</p></div>
+  <div class="filters">
+    <a class="btn ghost" href="{% url 'customer_edit' customer.pk %}">Edit</a>
+    <a class="btn quiet" href="{% url 'system_new' customer.pk %}">Add system</a>
+    <a class="btn" href="{% url 'job_new_customer' customer.pk %}">Book visit without system</a>
+  </div>
+</div>
+{% if customer.address or customer.notes %}
+<section class="panel pad"><dl class="kv">
+  {% if customer.address %}<dt>Address</dt><dd>{{ customer.address|linebreaksbr }}{% if customer.area %}, {{ customer.area }}{% endif %}</dd>{% endif %}
+  {% if customer.notes %}<dt>Notes</dt><dd>{{ customer.notes|linebreaksbr }}</dd>{% endif %}
+</dl></section>
+{% endif %}
+<section class="panel">
+  <div class="panel-h"><h2>Water systems</h2></div>
+  {% for s in systems %}
+    <div class="row due">
+      <div class="who"><a href="{% url 'system_detail' s.pk %}">{{ s }}</a><small>{{ s.model|default:"" }}{% if s.serial %} · S/N {{ s.serial }}{% endif %}</small></div>
+      <div class="comps">{% for c in s.components.all %}<span class="chip {{ c.level }}">{{ c.name }} · {{ c.next_due|date:"M j" }}</span>{% endfor %}</div>
+      <div></div>
+      <div class="acts"><a class="btn sm" href="{% url 'job_new' s.pk %}">Book visit</a></div>
+    </div>
+  {% empty %}<div class="empty"><span>No systems recorded yet.</span><a class="btn quiet" href="{% url 'system_new' customer.pk %}">Add system</a></div>{% endfor %}
+</section>
+<section class="panel">
+  <div class="panel-h"><h2>Recent visits</h2></div>
+  {% for job in jobs %}{% include "includes/job_row.html" %}{% empty %}<div class="empty"><span>No visits yet.</span></div>{% endfor %}
+</section>
+<form method="post" action="{% url 'customer_archive' customer.pk %}" class="actions">
+  {% csrf_token %}<button class="btn danger sm" type="submit" data-confirm="Tap again to archive">Archive customer</button>
+</form>
+{% endblock %}

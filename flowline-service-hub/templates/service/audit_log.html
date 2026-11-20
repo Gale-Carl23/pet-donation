@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Audit log{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>Audit log</h1><p>Sign-ins, failed sign-ins and every change, newest first</p></div>
+  <a class="btn ghost" href="{% url 'company_settings' %}">Back to settings</a></div>
+<section class="panel"><div class="tablewrap"><table>
+  <thead><tr><th>When</th><th>Who</th><th>Action</th><th>Record</th><th>IP address</th></tr></thead>
+  <tbody>{% for e in page %}<tr><td class="num">{{ e.at|date:"M j, Y H:i" }}</td><td>{{ e.user|default:"—" }}</td><td><span class="pill {% if e.action == 'login_failed' %}bad{% else %}mute{% endif %}">{{ e.action }}</span></td><td>{{ e.summary }}</td><td class="mono">{{ e.ip_address|default:"" }}</td></tr>
+  {% empty %}<tr><td colspan="5" class="muted">Nothing recorded yet.</td></tr>{% endfor %}</tbody>
+</table></div></section>
+{% include "includes/pager.html" %}
+{% endblock %}

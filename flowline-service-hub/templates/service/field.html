@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{% if technicians %}Field app{% else %}My jobs{% endif %}{% endblock %}
+{% block content %}
+<div class="field">
+  <div class="pagehead"><div><h1>{% if technicians %}Field app{% else %}My jobs{% endif %}</h1><p>{{ today|date:"l, M j" }}</p></div></div>
+  {% if technicians %}
+    <form method="get" class="filters">
+      <select name="tech" aria-label="Technician">
+        <option value="">Choose technician…</option>
+        {% for t in technicians %}<option value="{{ t.pk }}" {% if tech and tech.pk == t.pk %}selected{% endif %}>{{ t }}</option>{% endfor %}
+      </select>
+      <button class="btn ghost" type="submit">Show jobs</button>
+    </form>
+  {% endif %}
+  {% if not tech %}
+    <div class="empty"><b>Pick a technician</b><span>See the jobs on their phone screen.</span></div>
+  {% else %}
+    <div class="eyebrow">Today</div>
+    {% for job in current %}{% include "includes/field_card.html" %}{% empty %}<div class="empty"><span>No visits today.</span></div>{% endfor %}
+    {% if upcoming %}<div class="eyebrow">Next 7 days</div>{% for job in upcoming %}{% include "includes/field_card.html" %}{% endfor %}{% endif %}
+  {% endif %}
+</div>
+{% endblock %}

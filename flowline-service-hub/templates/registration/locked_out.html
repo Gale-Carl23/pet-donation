@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Sign-in locked{% endblock %}
+{% block content %}
+<div class="auth">
+  <div class="panel pad">
+    <h1>Too many failed sign-ins</h1>
+    <p>For security, sign-in for this account is paused for 30 minutes. Try again later, or ask your administrator to unlock it.</p>
+    <a class="btn ghost" href="{% url 'login' %}">Back to sign in</a>
+  </div>
+</div>
+{% endblock %}

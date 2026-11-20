@@ -1,0 +1,1 @@
+{% if job.is_late %}<span class="pill bad">Late</span>{% elif job.status == "scheduled" %}<span class="pill acc">Scheduled</span>{% elif job.status == "in_progress" %}<span class="pill warn">In progress</span>{% elif job.status == "done" %}<span class="pill ok">Done</span>{% else %}<span class="pill mute">Cancelled</span>{% endif %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Service reminder{% endblock %}
+{% block content %}
+<div class="sheetpage">
+  <div class="pagehead"><div><div class="eyebrow">Service reminder</div><h1>{{ system.customer.name }}</h1><p>{{ system }}</p></div>
+    <a class="btn ghost" href="{% url 'system_detail' system.pk %}">Back</a></div>
+  <section class="panel pad stack">
+    <dl class="kv"><dt>Send to</dt><dd>{{ system.customer.contact_name|default:"—" }}{% if system.customer.phone %} · <span class="mono selectable">{{ system.customer.phone }}</span>{% endif %}</dd></dl>
+    <pre class="msg" id="reminder">{{ text }}</pre>
+    <p class="small muted">Paste into SMS, Viber or Messenger. Book the visit once the customer replies.</p>
+    <div class="actions"><a class="btn ghost" href="{% url 'job_new' system.pk %}">Book visit</a><button class="btn" type="button" data-copy="#reminder">Copy message</button></div>
+  </section>
+</div>
+{% endblock %}

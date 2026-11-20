@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Book a visit{% endblock %}
+{% block content %}
+<div class="sheetpage">
+  <div class="pagehead">
+    <div><div class="eyebrow">Book a visit</div><h1>{{ customer.name }}</h1><p>{% if system %}{{ system }}{% else %}No system selected{% endif %}</p></div>
+    <a class="btn ghost" href="{% url 'customer_detail' customer.pk %}">Back</a>
+  </div>
+  <form method="post" class="panel pad stack">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="flag bad">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+    <div class="grid2">
+      {% include "includes/field.html" with field=form.job_type %}
+      {% include "includes/field.html" with field=form.technician %}
+      {% include "includes/field.html" with field=form.scheduled_date %}
+      {% include "includes/field.html" with field=form.scheduled_time %}
+    </div>
+    {% if form.components %}
+      <fieldset class="check">
+        <legend class="eyebrow">Components to service</legend>
+        {% for cb in form.components %}<label class="{% if cb.data.selected %}on{% endif %}">{{ cb.tag }} {{ cb.choice_label }}</label>{% endfor %}
+        {% for e in form.components.errors %}<small class="err">{{ e }}</small>{% endfor %}
+      </fieldset>
+    {% endif %}
+    {% include "includes/field.html" with field=form.instructions %}
+    <div class="actions"><button class="btn" type="submit">Book visit</button></div>
+  </form>
+</div>
+{% endblock %}

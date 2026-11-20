@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}{{ job.customer.name }} · job{% endblock %}
+{% block content %}
+<div class="sheetpage">
+  <div class="pagehead">
+    <div>
+      <div class="eyebrow">{{ job.get_job_type_display }}</div>
+      <h1>{{ job.customer.name }}</h1>
+      <p>{{ job.scheduled_date|date:"D, M j, Y" }} · {% if job.scheduled_time %}{{ job.scheduled_time|time:"g:i A" }}{% else %}Any time{% endif %} · {{ job.technician|default:"Unassigned" }} {% include "includes/status.html" %}</p>
+    </div>
+    <a class="btn ghost" href="{% if user.is_office %}{% url 'schedule' %}{% else %}{% url 'field' %}{% endif %}">Back</a>
+  </div>
+
+  <section class="panel pad">
+    <dl class="kv">
+      <dt>Address</dt><dd>{{ job.customer.address|default:"—" }}{% if job.customer.area %}, {{ job.customer.area }}{% endif %}</dd>
+      <dt>Contact</dt><dd>{{ job.customer.contact_name|default:"—" }}{% if job.customer.phone %} · <span class="mono selectable">{{ job.customer.phone }}</span>{% endif %}</dd>
+      <dt>System</dt><dd>{% if job.system %}{{ job.system }}{% if job.system.serial %} · S/N <span class="mono">{{ job.system.serial }}</span>{% endif %}{% else %}—{% endif %}</dd>
+      {% if job.instructions %}<dt>Instructions</dt><dd>{{ job.instructions|linebreaksbr }}</dd>{% endif %}
+    </dl>
+  </section>
+
+  {% if job.is_open %}
+  <form method="post" action="{% url 'job_save' job.pk %}" class="stack">
+    {% csrf_token %}
+    <section class="panel pad stack">
+      <h2>Checklist</h2>
+      <div class="check">
+        {% for t in tasks %}
+          <label class="{% if t.done %}on{% endif %}"><input type="checkbox" name="task" value="{{ t.pk }}" {% if t.done %}checked{% endif %}> {{ t.label }}{% if t.component_id %}<span class="tag">resets due date</span>{% endif %}</label>
+        {% endfor %}
+      </div>
+    </section>
+    <section class="panel pad stack">
+      <h2>Water readings</h2>
+      <div class="grid4">
+        {% with f=field_form %}
+          {% include "includes/field.html" with field=f.tds_raw %}
+          {% include "includes/field.html" with field=f.tds_product %}
+          {% include "includes/field.html" with field=f.ph %}
+          {% include "includes/field.html" with field=f.pressure_psi %}
+        {% endwith %}
+      </div>
+      {% with flags=job.reading_flags %}{% if flags %}<div class="flags">{% for level, text in flags %}<div class="flag {{ level }}">{{ text }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+      {% include "includes/field.html" with field=field_form.parts_used %}
+      {% include "includes/field.html" with field=field_form.field_notes %}
+      {% include "includes/field.html" with field=field_form.received_by %}
+    </section>
+    <div class="actions">
+      <button class="btn ghost" type="submit" name="action" value="save">Save progress</button>
+      {% if job.status == "scheduled" %}<button class="btn quiet" type="submit" name="action" value="start">Start job</button>{% endif %}
+      <button class="btn" type="submit" name="action" value="complete">Complete job</button>
+    </div>
+  </form>
+
+  {% if assign_form %}
+  <section class="panel pad stack">
+    <h2>Reschedule or reassign</h2>
+    <form method="post" action="{% url 'job_assign' job.pk %}" class="stack">
+      {% csrf_token %}
+      <div class="grid2">
+        {% include "includes/field.html" with field=assign_form.technician %}
+        {% include "includes/field.html" with field=assign_form.scheduled_date %}
+        {% include "includes/field.html" with field=assign_form.scheduled_time %}
+      </div>
+      {% include "includes/field.html" with field=assign_form.instructions %}
+      <div class="actions"><button class="btn ghost" type="submit">Update job</button></div>
+    </form>
+    <form method="post" action="{% url 'job_cancel' job.pk %}" class="actions">
+      {% csrf_token %}
+      <button class="btn danger" type="submit" data-confirm="Tap again to cancel this job">Cancel job</button>
+    </form>
+  </section>
+  {% endif %}
+
+  {% else %}
+  <section class="panel pad stack">
+    <h2>{% if job.status == "done" %}Completed {{ job.completed_at|date:"M j, Y" }}{% if job.completed_by %} by {{ job.completed_by }}{% endif %}{% else %}This job was cancelled{% endif %}</h2>
+    <div class="check">{% for t in tasks %}<label class="{% if t.done %}on{% endif %}"><input type="checkbox" disabled {% if t.done %}checked{% endif %}> {{ t.label }}</label>{% endfor %}</div>
+    {% with flags=job.reading_flags %}{% if flags %}<div class="flags">{% for level, text in flags %}<div class="flag {{ level }}">{{ text }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+    {% if report %}
+      <div class="eyebrow">Service report to send the customer</div>
+      <pre class="msg" id="report">{{ report }}</pre>
+      <div class="actions"><button class="btn" type="button" data-copy="#report">Copy report</button></div>
+    {% endif %}
+  </section>
+  {% endif %}
+</div>
+{% endblock %}
